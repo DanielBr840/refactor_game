@@ -86,30 +86,32 @@ class Room:
 
 def battle(player, enemy):
     while player.is_alive() and enemy.is_alive():
-        print("\nВиберіть дію: [1] Атакувати, [2] Втекти")
-        choice = input("Ваш вибір: ")
+        choice = get_player_choice()
         if choice == "1":
-            damage = player.attack + random.randint(-2, 2)
-            print(f"{player.name} атакує {enemy.name}!")
-            enemy.take_damage(damage)
-            if enemy.is_alive():
-                enemy.attack_player(player)
+            attack_enemy(player, enemy)
         elif choice == "2":
-            chance = random.random()
-            if chance > 0.5:
-                print(f"{player.name} успішно втік від {enemy.name}!")
+            if attempt_escape(player, enemy):
                 return
-            else:
-                print(f"{player.name} не зміг втекти!")
-                enemy.attack_player(player)
-        else:
-            print("Невірний вибір. Спробуйте ще раз.")
-    if not player.is_alive():
-        print(f"{player.name} загинув у бою з {enemy.name}!")
-        sys.exit(0)
+        if enemy.is_alive():
+            enemy.attack_player(player)
+
+def get_player_choice():
+    print("\nChoose an action: [1] Attack, [2] Run")
+    return input("Your choice: ")
+
+def attack_enemy(player, enemy):
+    damage = player.attack + random.randint(-2, 2)
+    print(f"{player.name} attacks {enemy.name}!")
+    enemy.take_damage(damage)
+
+def attempt_escape(player, enemy):
+    if random.random() > 0.5:
+        print(f"{player.name} successfully ran away from {enemy.name}!")
+        return True
     else:
-        print(f"{player.name} переміг {enemy.name} і отримав {enemy.gold_reward} золота!")
-        player.add_gold(enemy.gold_reward)
+        print(f"{player.name} failed to escape!")
+        return False
+
 
 def random_event(player):
     event_chance = random.random()
