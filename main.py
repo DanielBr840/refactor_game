@@ -1,6 +1,11 @@
 import random
 import sys
 
+PLAYER_START_HP = 100
+PLAYER_START_ATTACK = 10
+PLAYER_START_DEFENSE = 5
+DAMAGE_VARIANCE = (-2, 2)
+
 class Character:
     def __init__(self, name, hp, attack, defense):
         self.name = name
@@ -19,7 +24,7 @@ class Character:
 
 class Player(Character):
     def __init__(self, name):
-        super().__init__(name, 100, 10, 5)
+        super().__init__(name, PLAYER_START_HP, PLAYER_START_ATTACK, PLAYER_START_DEFENSE)
         self.gold = 0
         self.inventory = []
 
@@ -61,7 +66,7 @@ class Enemy(Character):
         return damage_taken
 
     def attack_player(self, player):
-        damage = self.attack + random.randint(-2, 2)
+        damage = self.attack + random.randint(*DAMAGE_VARIANCE)
         print(f"{self.name} атакує {player.name}!")
         player.take_damage(damage)
 
@@ -110,7 +115,7 @@ def get_player_choice():
     return input("Your choice: ")
 
 def attack_enemy(player, enemy):
-    damage = player.attack + random.randint(-2, 2)
+    damage = player.attack + random.randint(*DAMAGE_VARIANCE)
     print(f"{player.name} attacks {enemy.name}!")
     enemy.take_damage(damage)
 
