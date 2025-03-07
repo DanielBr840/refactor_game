@@ -1,12 +1,25 @@
 import random
 import sys
 
-class Player:
-    def __init__(self, name):
+class Character:
+    def __init__(self, name, hp, attack, defense):
         self.name = name
-        self.hp = 100
-        self.attack = 10
-        self.defense = 5
+        self.hp = hp
+        self.attack = attack
+        self.defense = defense
+
+    def is_alive(self):
+        return self.hp > 0
+
+    def take_damage(self, damage):
+        damage_taken = max(0, damage - self.defense)
+        self.hp -= damage_taken
+        print(f"{self.name} takes {damage_taken} damage. HP left: {self.hp}")
+        return damage_taken
+
+class Player(Character):
+    def __init__(self, name):
+        super().__init__(name, 100, 10, 5)
         self.gold = 0
         self.inventory = []
 
@@ -33,12 +46,9 @@ class Player:
         self.inventory.append(item)
         print(f"{self.name} знайшов {item}!")
 
-class Enemy:
+class Enemy(Character):
     def __init__(self, name, hp, attack, defense, gold_reward):
-        self.name = name
-        self.hp = hp
-        self.attack = attack
-        self.defense = defense
+        super().__init__(name, hp, attack, defense)
         self.gold_reward = gold_reward
 
     def is_alive(self):
